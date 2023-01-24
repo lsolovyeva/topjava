@@ -18,32 +18,26 @@ public class UserMealsUtilTest {
 
     private final List<UserMeal> meals = Arrays.asList(
             new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 30, 11, 0), "Обед", 1000),
-            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
+            new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
 
     @Test
-    public void testExceedFalse() {
+    public void testFilteredByCycles() {
         List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         assertEquals(2, mealsTo.size());
         assertFalse(mealsTo.get(0).getExcess());
-        assertFalse(mealsTo.get(1).getExcess());
-
-        List<UserMealWithExcess> mealsTo2 = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-        assertEquals(2, mealsTo2.size());
-        assertFalse(mealsTo2.get(0).getExcess());
-        assertFalse(mealsTo2.get(1).getExcess());
+        assertTrue(mealsTo.get(1).getExcess());
     }
 
     @Test
-    public void testExceedTrue() {
-        List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 1000);
+    public void testFilteredByStreams() {
+        List<UserMealWithExcess> mealsTo = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         assertEquals(2, mealsTo.size());
-        assertTrue(mealsTo.get(0).getExcess());
+        assertFalse(mealsTo.get(0).getExcess());
         assertTrue(mealsTo.get(1).getExcess());
-
-        List<UserMealWithExcess> mealsTo2 = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 1000);
-        assertEquals(2, mealsTo2.size());
-        assertTrue(mealsTo2.get(0).getExcess());
-        assertTrue(mealsTo2.get(1).getExcess());
     }
 }
