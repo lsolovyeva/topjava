@@ -29,17 +29,12 @@
     </tr>
 
     <c:forEach var="meal" items="${meals}">
-        <c:if test="${meal.excess == false}">
-            <tr style="color: green">
-        </c:if>
-        <c:if test="${meal.excess == true}">
-            <tr style="color: red">
-        </c:if>
-        <td><c:out value="${meal.date} ${meal.time}"/></td>
-        <td><c:out value="${meal.description}"/></td>
-        <td><c:out value="${meal.calories}"/></td>
-        <td><a href="index.html">Update</a></td>
-        <td><a href="index.html">Delete</a></td>
+        <tr style="color: ${meal.excess == false ? "green" : "red"}">
+            <td><c:out value="${meal.date} ${meal.time}"/></td>
+            <td><c:out value="${meal.description}"/></td>
+            <td><c:out value="${meal.calories}"/></td>
+            <td><a href="index.html">Update</a></td>
+            <td><a href="index.html">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
