@@ -17,7 +17,7 @@
 <hr>
 <h2>Meals</h2>
 
-<p><a href="index.html">Add Meal</a></p>
+<p><a href="edit.jsp">Add Meal</a></p>
 
 <table>
     <tr>
@@ -33,8 +33,8 @@
             <td><c:out value="${meal.date} ${meal.time}"/></td>
             <td><c:out value="${meal.description}"/></td>
             <td><c:out value="${meal.calories}"/></td>
-            <td><a href="index.html">Update</a></td>
-            <td><a href="index.html">Delete</a></td>
+            <td><a href="meals?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
+            <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
