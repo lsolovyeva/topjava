@@ -1,8 +1,21 @@
 package ru.javawebinar.topjava.web.meal;
 
-import ru.javawebinar.topjava.service.MealService;
+import org.springframework.stereotype.Controller;
+import ru.javawebinar.topjava.model.Meal;
 
-public class MealRestController {
-    private MealService service;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
+@Controller
+public class MealRestController extends AbstractMealController {
+    public Meal get() {
+        return super.get(authUserId());
+    }
+
+    public void delete() {
+        super.delete(authUserId());
+    }
+
+    public void update(Meal meal) {
+        super.update(meal, authUserId());
+    }
 }
