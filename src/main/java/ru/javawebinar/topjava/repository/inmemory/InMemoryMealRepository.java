@@ -1,19 +1,19 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
@@ -21,15 +21,12 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(this::save);
+        MealsUtil.meals.forEach(meal -> this.save(meal, authUserId()));
     }
 
-    @Autowired
-    UserRepository userRepository;
-
     @Override
-    public Meal save(Meal meal) {
-        if (userRepository.getAll().stream().noneMatch(User::isEnabled)) {
+    public Meal save(Meal meal, int userId) {
+        if (userId != authUserId()) {
             return null;
         }
         if (meal.isNew()) {
@@ -42,24 +39,26 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public boolean delete(int id) {
-        if (userRepository.getAll().stream().noneMatch(User::isEnabled)) {
+    public boolean delete(int id, int userId) {
+        if (userId != authUserId()) {
             return false;
         }
         return repository.remove(id) != null;
     }
 
     @Override
-    public Meal get(int id) {
-        if (userRepository.getAll().stream().noneMatch(User::isEnabled)) {
+    public Meal get(int id, int userId) {
+        if (userId != authUserId()) {
             return null;
         }
         return repository.get(id);
     }
 
     @Override
-    public Collection<Meal> getAll() {
+    public Collection<Meal> getAll(int userId) {
+        if (userId != authUserId()) {
+            return Collections.emptyList();
+        }
         return repository.values().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 }
-

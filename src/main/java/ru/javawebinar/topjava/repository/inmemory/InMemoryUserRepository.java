@@ -19,13 +19,12 @@ public class InMemoryUserRepository implements UserRepository {
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    public static final List<User> users = Arrays.asList(
-            new User(1, "admin", "admin@gmail.com", "123", Role.ADMIN),
-            new User(2, "user1", "user1@gmail.com", "456", Role.USER),
-            new User(3, "stranger", "stranger@gmail.com", "789", Role.USER)
-    );
-
-    {
+    public InMemoryUserRepository() {
+        final List<User> users = Arrays.asList(
+                new User(counter.incrementAndGet(), "admin", "admin@gmail.com", "123", Role.ADMIN),
+                new User(counter.incrementAndGet(), "user1", "user1@gmail.com", "456", Role.USER),
+                new User(counter.incrementAndGet(), "stranger", "stranger@gmail.com", "789", Role.USER)
+        );
         users.forEach(this::save);
     }
 
@@ -40,10 +39,9 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("save {}", user);
         if (user.isNew()) {
             user.setId(counter.incrementAndGet());
-            repository.put(user.getId(), user);
-            return user;
         }
-        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
+        repository.put(user.getId(), user);
+        return user;
     }
 
     @Override
@@ -55,13 +53,12 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return repository.values().stream().sorted(Comparator.comparing(AbstractNamedEntity::getName)).collect(Collectors.toList());
+        return repository.values().stream().sorted(Comparator.comparing(AbstractNamedEntity::getName, String.CASE_INSENSITIVE_ORDER)).collect(Collectors.toList());
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         return repository.values().stream().filter(user -> email.equals(user.getEmail())).findFirst().orElse(null);
-
     }
 }
