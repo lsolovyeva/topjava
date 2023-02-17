@@ -14,6 +14,6 @@ VALUES ('USER', 100000),
        ('ADMIN', 100001);
 
 INSERT INTO meals (user_id, dateTime, description, calories)
-VALUES (100000, now(), 'breakfast', '1000'),
-       (100001, '2023-02-17 13:20:00', 'dinner', '700'),
-       (100002, '2023-02-17 19:30:00', 'supper', '500');
+VALUES (100000, '2023-02-17 09:00:00', 'breakfast', '1000'),
+       (100001, '2023-02-17 13:00:00', 'dinner', '700'),
+       (100002, '2023-02-17 19:00:00', 'supper', '500');
