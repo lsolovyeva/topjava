@@ -21,7 +21,8 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        boolean isOwnMeal = meal.getId() == null || em.find(Meal.class, meal.getId()) != null && em.find(Meal.class, meal.getId()).getUser().getId() == userId;
+        boolean isOwnMeal = meal.getId() == null || em.find(Meal.class, meal.getId()) != null
+                && em.find(Meal.class, meal.getId()).getUser().getId() == userId;
         if (!isOwnMeal) {
             return null;
         }
@@ -38,9 +39,9 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        boolean isOwnMeal = em.find(Meal.class, id) != null && em.find(Meal.class, id).getUser().getId() == userId;
-        return isOwnMeal && em.createNamedQuery(Meal.DELETE)
+        return em.createNamedQuery(Meal.DELETE)
                 .setParameter("id", id)
+                .setParameter("userId", userId)
                 .executeUpdate() != 0;
     }
 
