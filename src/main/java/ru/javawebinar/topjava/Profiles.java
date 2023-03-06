@@ -14,7 +14,7 @@ public class Profiles {
             POSTGRES_DB = "postgres",
             HSQL_DB = "hsqldb";
 
-    //  Get DB profile depending of DB driver in classpath
+    //  Get DB profile depending on DB driver in classpath
     public static String getActiveDbProfile() {
         if (ClassUtils.isPresent("org.postgresql.Driver", null)) {
             return POSTGRES_DB;
@@ -22,6 +22,20 @@ public class Profiles {
             return HSQL_DB;
         } else {
             throw new IllegalStateException("Could not find DB driver");
+        }
+    }
+
+    public static String getActiveRepositoryProfile(String activeRepository) {
+        switch (activeRepository) {
+            case JDBC -> {
+                return JDBC;
+            }
+            case JPA -> {
+                return JPA;
+            }
+            default -> {
+                return DATAJPA;
+            }
         }
     }
 }
