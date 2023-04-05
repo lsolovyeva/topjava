@@ -1,4 +1,4 @@
-const mealAjaxUrl = "/meals/";
+const mealAjaxUrl = "meals/";
 
 const ctx = {
     ajaxUrl: mealAjaxUrl
@@ -6,7 +6,7 @@ const ctx = {
 
 $(function () {
     makeEditable(
-        $("#datatable").DataTable({
+        $("#datatable1").DataTable({
             "paging": false,
             "info": true,
             "columns": [
